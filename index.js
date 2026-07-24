@@ -1084,5 +1084,6 @@ class Usersites extends Layer {
 
 manager.registerLayer({
     layer: new Usersites(),
-    where: options.layerVisibility.both
+    where: options.layerVisibility.both,
+	type: options.layerType.app
 });
