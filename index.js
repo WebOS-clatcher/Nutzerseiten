@@ -795,8 +795,12 @@ class Usersites extends Layer {
 
             if(data.info.eventimage) {
                 const img = document.createElement("img");
+				img.style.cursor = "pointer";
                 img.classList.add("clatcher-width");
                 img.src = data.info.eventimage;
+				img.addEventListener("click", () => {
+					new ImageViewer(img.src).show();
+				});
                 content.appendChild(img);
             }
 
@@ -907,8 +911,8 @@ class Usersites extends Layer {
                     fd.append("file", file);
                     fd.append("text", text);
 
+					postBtn.disabled = true;
                     const xhr = new XMLHttpRequest();
-
                     xhr.open("POST", "/post/publiccomment");
 
                     xhr.upload.addEventListener("progress", e => {
@@ -927,18 +931,18 @@ class Usersites extends Layer {
                             this.pid = 0;
                             this.loadUsersite(options.usersite.name);
                         }
-
-                        textarea.value = "";
-                        fileInput.value = "";
-                        postBtn.innerHTML = '<i class="fas fa-pencil-alt"></i> Post';
                     };
 
                     xhr.onerror = () => {
                         new Toast("Fehler beim Upload").show();
-                        textarea.value = "";
-                        fileInput.value = "";
-                        postBtn.innerHTML = '<i class="fas fa-pencil-alt"></i> Post';
                     }
+
+					xhr.onloadend = () => {
+						textarea.value = "";
+						fileInput.value = "";
+						postBtn.disabled = false;
+						postBtn.innerHTML = '<i class="fas fa-pencil-alt"></i> Post';
+					};
 
                     xhr.send(fd);
                 });
